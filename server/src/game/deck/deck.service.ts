@@ -1,5 +1,7 @@
 import { Card, Color } from '../../shared/types';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class Deck {
   static COLORS: Color[] = ['red', 'blue', 'green', 'yellow'];
 
