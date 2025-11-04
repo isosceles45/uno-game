@@ -61,10 +61,6 @@ export class GameService {
     this.socketService.drawCard(roomId, playerId);
   }
 
-  getCurrentGameState(): GameState | null {
-    return this.gameStateSubject.value;
-  }
-
   getCurrentPlayer(): Player | null {
     return this.currentPlayerSubject.value;
   }

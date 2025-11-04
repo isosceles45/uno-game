@@ -33,7 +33,9 @@ export class GameService {
       (card.type === 'number' &&
         topCard.type === 'number' &&
         card.value === topCard.value) ||
-      card.type === topCard.type ||
+      (card.type !== 'number' &&
+        topCard.type !== 'number' &&
+        card.type === topCard.type) ||
       card.color === 'wild'
     );
   }

@@ -1,0 +1,417 @@
+.game-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: linear-gradient(120deg, #f093fb 0%, #f5576c 100%);
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(-100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes cardDeal {
+  from {
+    opacity: 0;
+    transform: translateY(-50px) rotate(-5deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotate(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.error-banner {
+  background: #e74c3c;
+  color: white;
+  padding: 1rem;
+  text-align: center;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  animation: slideIn 0.4s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.waiting-room {
+  width: 100%;
+  max-width: 600px;
+  background-image: linear-gradient(to top, #fdcbf1 0%, #fdcbf1 1%, #e6dee9 100%);
+  color: #333;
+  padding: 2.5rem;
+  border-radius: 24px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.waiting-room h2 {
+  color: mediumpurple;
+  margin-bottom: 1rem;
+  font-size: 2rem;
+}
+
+.waiting-room p {
+  color: deeppink;
+  font-size: 1.3rem;
+}
+
+.waiting-room strong {
+  background: white;
+  padding: 0.45rem;
+  border-radius: 6px;
+  color: purple;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.player-item {
+  background: white;
+  color: black;
+  padding: 1rem;
+  margin: 0.5rem 0;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.btn-start {
+  background: white;
+  color: black;
+  margin-top: 1rem;
+  padding: 1rem 1.5rem;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-start:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 0, 3, 0.2);
+}
+
+.waiting-text {
+  color: #666;
+  margin-top: 1rem;
+}
+
+/* Game Board */
+.game-board {
+  width: 100%;
+  max-width: 1400px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Game Info Header */
+.game-info {
+  background-image: linear-gradient(to top, #fdcbf1 0%, #fdcbf1 1%, #e6dee9 100%);
+  width: 100%;
+  padding: 1.5rem;
+  border-radius: 16px;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  font-weight: 600;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.info-item .label {
+  color: #666;
+}
+
+.info-item .value {
+  color: #333;
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.direction-arrow {
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-left: 14px solid #27ae60;
+  margin-left: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.direction-arrow.reverse {
+  border-left: none;
+  border-right: 14px solid #e74c3c;
+  transform: translateY(1px);
+}
+
+/* Other Players */
+.other-players {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.other-player {
+  padding: 1.5rem;
+  text-align: center;
+  min-width: 160px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.player-name {
+  font-weight: 600;
+  font-size: 1.2rem;
+  padding: 0.6rem 1rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(4px);
+  margin-bottom: 0.8rem;
+  text-align: center;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.25s ease;
+}
+
+.player-name:hover {
+  transform: scale(1.03);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.player-name span {
+  color: #d32f2f;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/* Card Fan Display for Other Players */
+.other-player-hand {
+  display: flex;
+  justify-content: center;
+  gap: -30px;
+  margin-top: 0.5rem;
+  position: relative;
+  height: 60px;
+}
+
+.other-player-card {
+  width: 40px;
+  height: 60px;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease;
+}
+
+.other-player-card:hover {
+  transform: translateY(-5px);
+}
+
+.other-player-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Center Area */
+.center-area {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4rem;
+  margin: 3rem 0;
+  position: relative;
+}
+
+.deck {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.deck::after {
+  content: 'DRAW';
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.9);
+  padding: 0.3rem 0.8rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #333;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.deck:hover:not(.disabled) {
+  transform: scale(1.15) rotate(-5deg);
+  filter: brightness(1.1);
+}
+
+.deck:hover:not(.disabled)::after {
+  opacity: 1;
+}
+
+.deck.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  filter: grayscale(50%);
+}
+
+.current-card-area {
+  text-align: center;
+  position: relative;
+}
+
+.current-card {
+  animation: cardDeal 0.5s ease;
+}
+
+.color-indicator {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 2px solid #333;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.color-indicator.red { background: red }
+.color-indicator.blue { background: mediumpurple }
+.color-indicator.green { background: limegreen }
+.color-indicator.yellow { background: orange }
+
+/* Cards */
+.card {
+  width: 100px;
+  height: 150px;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.card img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 10px;
+}
+
+.card.playable {
+  box-shadow: 0 0 20px rgba(0, 0, 5, 0.3);
+}
+
+.card.playable:hover {
+  transform: translateY(-15px) scale(1.05);
+  box-shadow: 0 12px 24px rgba(0, 0, 5, 0.6);
+  z-index: 10;
+}
+
+.card.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: grayscale(30%);
+}
+
+/* My Hand */
+.my-hand {
+  padding: 2rem;
+  margin-top: 2rem;
+}
+
+.hand-cards {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 0.5rem;
+}
+
+.hand-cards .card {
+  animation: cardDeal 0.5s ease backwards;
+}
+
+/* Color Picker Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.color-picker {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 24px;
+  text-align: center;
+}
+
+.color-picker h3 {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.color-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.color-option {
+  padding: 2rem;
+  border-radius: 16px;
+  color: white;
+  font-weight: 700;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.color-option.red { background: red }
+.color-option.blue { background: mediumpurple }
+.color-option.green { background: limegreen }
+.color-option.yellow { background: orange }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .center-area {
+    gap: 2rem;
+  }
+
+  .card {
+    width: 80px;
+    height: 120px;
+  }
+
+  .other-players {
+    gap: 0.8rem;
+  }
+
+  .other-player {
+    min-width: 120px;
+    padding: 1rem;
+  }
+}

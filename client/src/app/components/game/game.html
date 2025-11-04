@@ -1,0 +1,149 @@
+<div class="game-container">
+  <!-- Error Message -->
+  @if (error) {
+    <div class="error-banner">
+      {{ error }}
+    </div>
+  }
+
+  <!-- Waiting Room -->
+  @if (gameState && !gameState.isActive) {
+    <div class="waiting-room">
+      <h2>Waiting Room</h2>
+      <div class="room-id">
+        <p>Room ID: <strong>{{ roomId.toUpperCase() }}</strong></p>
+      </div>
+      <div class="players-list">
+        @for (player of gameState.players; track player.id) {
+          <div class="player-item">
+            {{ player.name }}
+            @if (isMe(player.id)) {
+              <span style="margin-left: 0.5rem;">(You)</span>
+            }
+          </div>
+        }
+      </div>
+      @if (gameState.players.length >= 2) {
+        <button (click)="startGame()" class="btn-start">
+          Start Game
+        </button>
+      }
+      @if (gameState.players.length < 2) {
+        <p class="waiting-text">
+          Waiting for more players to join...
+        </p>
+      }
+    </div>
+  }
+
+  <!-- Game Board -->
+  @if (gameState && gameState.isActive) {
+    <div class="game-board">
+      <!-- Game Info Header -->
+      <div class="game-info">
+        <div class="info-item">
+          <span>Active Color:</span>
+          <span
+            [class]="getActiveColor(gameState.currentColor || 'red')"
+            [title]="gameState.currentColor"
+          ></span>
+        </div>
+        <div class="info-item">
+          <span class="label">You: </span>
+          <span class="value">{{ getMyPlayerName() }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Direction:</span>
+          <div
+            class="direction-arrow"
+            [class.reverse]="gameState.direction === -1"
+          ></div>
+        </div>
+
+      </div>
+
+      <!-- Other Players -->
+      <div class="other-players">
+        @for (player of gameState.players; track player.id; let i = $index) {
+          @if (!isMe(player.id)) {
+            <div
+              class="other-player"
+              [class.current]="i === gameState.currentPlayerIndex"
+            >
+              <div class="player-name">
+                {{ player.name }}
+                @if (i === gameState.currentPlayerIndex) {
+                  <span style="margin-left: 0.3rem;">(playing)</span>
+                }
+              </div>
+              <!-- Show card backs for other players -->
+              <div class="other-player-hand">
+                @for (card of getCardBacksArray(player.hand.length); track $index) {
+                  <div class="other-player-card" [style.transform]="'translateX(' + ($index * -15) + 'px)'">
+                    <img src="assets/card_back.png" alt="card back">
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        }
+      </div>
+
+      <!-- Center Area -->
+      <div class="center-area">
+        <!-- Deck -->
+        <div class="deck card" (click)="drawCard()" [class.disabled]="!isMyTurn()">
+          <img src="assets/card_back.png" alt="deck">
+        </div>
+
+        <!-- Current Card -->
+        <div class="current-card-area">
+          @if (gameState.currentCard) {
+            <div class="card current-card">
+              <img [src]="getCardImage(gameState.currentCard)" [alt]="gameState.currentCard.id">
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- My Hand -->
+      <div class="my-hand">
+        <div class="hand-cards">
+          @for (card of getMyHand(); track card.id) {
+            <div
+              class="card"
+              [class.playable]="canPlayCard(card)"
+              [class.disabled]="!isMyTurn() || !canPlayCard(card)"
+              (click)="onCardClick(card)"
+            >
+              <img [src]="getCardImage(card)" [alt]="card.id" />
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Color Picker Modal -->
+  @if (showColorPicker) {
+    <div class="modal-overlay" (click)="showColorPicker = false">
+      <div class="color-picker" (click)="$event.stopPropagation()">
+        <h3>Choose a Color</h3>
+        <div class="color-options">
+          <div class="color-option red" (click)="onColorSelect('red')">
+            Red
+          </div>
+          <div class="color-option blue" (click)="onColorSelect('blue')">
+            Blue
+          </div>
+          <div class="color-option green" (click)="onColorSelect('green')">
+            Green
+          </div>
+          <div class="color-option yellow" (click)="onColorSelect('yellow')">
+            Yellow
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>

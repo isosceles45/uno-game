@@ -37,6 +37,6 @@ export class LobbyComponent {
 
   createRoom(): void {
     // Generate random room ID
-    this.roomId = 'room' + Math.random().toString(36).substr(2, 6);
+    this.roomId = 'UNO' + Math.random().toString(36).substr(2, 3).toUpperCase();
   }
 }

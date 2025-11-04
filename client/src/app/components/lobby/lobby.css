@@ -3,12 +3,12 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-image: linear-gradient(120deg, #f093fb 0%, #f5576c 100%);
 }
 
 .lobby-card {
-  background: white;
-  padding: 2rem;
+  background-image: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
+  padding: 2.5rem;
   border-radius: 20px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   width: 100%;
@@ -17,7 +17,11 @@
 
 h1 {
   text-align: center;
-  color: #333;
+  font-size: 2.5rem;
+  background-image: linear-gradient(120deg, #f093fb 0%, #f5576c 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   margin-bottom: 2rem;
 }
 
@@ -28,12 +32,13 @@ h1 {
 label {
   display: block;
   margin-bottom: 0.5rem;
-  color: #555;
+  color: mediumpurple;
+  font-size: 1.2rem;
   font-weight: 600;
 }
 
 .input-field {
-  width: 100%;
+  width: 90%;
   padding: 0.75rem;
   border: 2px solid #ddd;
   border-radius: 8px;
@@ -67,8 +72,8 @@ label {
 
 .btn-primary {
   width: 100%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: white;
+  color: deeppink;
 }
 
 .btn-primary:hover:not(:disabled) {
@@ -82,8 +87,8 @@ label {
 }
 
 .btn-secondary {
-  background: #f0f0f0;
-  color: #333;
+  background: white;
+  color: deeppink;
 }
 
 .btn-secondary:hover {
