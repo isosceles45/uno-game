@@ -1,0 +1,38 @@
+<div class="lobby-container">
+  <div class="lobby-card">
+    <h1>UNO Game</h1>
+
+    <div class="form-group">
+      <label>Your Name</label>
+      <input
+        type="text"
+        [(ngModel)]="playerName"
+        placeholder="Enter your name"
+        class="input-field"
+      >
+    </div>
+
+    <div class="form-group">
+      <label>Room ID</label>
+      <div class="room-input-group">
+        <input
+          type="text"
+          [(ngModel)]="roomId"
+          placeholder="Enter room ID"
+          class="input-field"
+        >
+        <button (click)="createRoom()" class="btn-secondary">
+          Generate
+        </button>
+      </div>
+    </div>
+
+    <button
+      (click)="joinGame()"
+      class="btn-primary"
+      [disabled]="!roomId || !playerName"
+    >
+      Join Game
+    </button>
+  </div>
+</div>
