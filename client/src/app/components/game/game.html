@@ -28,6 +28,7 @@
       <h2>Waiting Room</h2>
       <div class="room-id">
         <p>Room ID: <strong>{{ roomId.toUpperCase() }}</strong></p>
+        <button class="copy-button">Copy</button>
       </div>
       <div class="players-list">
         @for (player of gameState.players; track player.id) {
@@ -88,9 +89,6 @@
             >
               <div class="player-name">
                 {{ player.name }}
-                @if (i === gameState.currentPlayerIndex) {
-                  <span style="margin-left: 0.3rem;">(playing)</span>
-                }
               </div>
               <!-- Show card backs for other players -->
               <div class="other-player-hand">
@@ -107,18 +105,20 @@
 
       <!-- Center Area -->
       <div class="center-area">
-        <!-- Deck -->
-        <div class="deck card" (click)="drawCard()" [class.disabled]="!isMyTurn()">
-          <img src="assets/card_back.png" alt="deck">
-        </div>
+        <div class="table">
+          <!-- Deck -->
+          <div class="deck card" (click)="drawCard()" [class.disabled]="!isMyTurn()">
+            <img src="assets/card_back.png" alt="deck">
+          </div>
 
-        <!-- Current Card -->
-        <div class="current-card-area">
-          @if (gameState.currentCard) {
-            <div class="card current-card">
-              <img [src]="getCardImage(gameState.currentCard)" [alt]="gameState.currentCard.id">
-            </div>
-          }
+          <!-- Current Card -->
+          <div class="current-card-area">
+            @if (gameState.currentCard) {
+              <div class="card current-card">
+                <img [src]="getCardImage(gameState.currentCard)" [alt]="gameState.currentCard.id">
+              </div>
+            }
+          </div>
         </div>
       </div>
 

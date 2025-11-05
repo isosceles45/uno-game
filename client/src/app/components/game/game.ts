@@ -76,6 +76,10 @@ export class GameComponent implements OnInit, OnDestroy {
     }
   }
 
+  copyCode() {
+    navigator.clipboard.writeText(this.roomId);
+  }
+
   showUnoButtonTemporarily(): void {
     this.unoButtonVisible = true;
     clearTimeout(this.unoTimeout);
