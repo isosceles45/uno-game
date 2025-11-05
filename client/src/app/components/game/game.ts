@@ -18,6 +18,10 @@ export class GameComponent implements OnInit, OnDestroy {
 
   private subscriptions: Subscription[] = [];
 
+  unoButtonVisible: boolean = false;
+  private unoTimeout: any;
+  private hasYelledUno: boolean = false;
+
   constructor(
     private gameService: GameService,
     private route: ActivatedRoute
@@ -26,14 +30,26 @@ export class GameComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.roomId = this.route.snapshot.paramMap.get('roomId')?.toUpperCase() || '';
 
-    // Subscribe to game state
     this.subscriptions.push(
       this.gameService.gameState$.subscribe(state => {
+        const previousHandSize = this.gameState ? this.getMyHand().length : 0;
         this.gameState = state;
+        const myHand = this.getMyHand();
+
+        if (myHand.length !== 1) {
+          this.hasYelledUno = false;
+          if (this.unoButtonVisible) {
+            this.unoButtonVisible = false;
+            clearTimeout(this.unoTimeout);
+          }
+        }
+
+        if (myHand.length === 1 && !this.unoButtonVisible && !this.hasYelledUno) {
+          this.showUnoButtonTemporarily();
+        }
       })
     );
 
-    // Subscribe to errors
     this.subscriptions.push(
       this.gameService.error$.subscribe(error => {
         this.error = error;
@@ -50,9 +66,7 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   onCardClick(card: Card): void {
-    if (!this.isMyTurn()) {
-      return;
-    }
+    if (!this.isMyTurn()) return;
 
     if (card.color === 'wild') {
       this.selectedCard = card;
@@ -60,6 +74,24 @@ export class GameComponent implements OnInit, OnDestroy {
     } else {
       this.playCard(card);
     }
+  }
+
+  showUnoButtonTemporarily(): void {
+    this.unoButtonVisible = true;
+    clearTimeout(this.unoTimeout);
+    this.unoTimeout = setTimeout(() => {
+      this.unoButtonVisible = false;
+    }, 5000);
+  }
+
+  yellUno(): void {
+    this.unoButtonVisible = false;
+    this.hasYelledUno = true;
+    clearTimeout(this.unoTimeout);
+
+    const player = this.gameService.getCurrentPlayer();
+    if (!player) return;
+    this.gameService.yellUno(this.roomId, player.id);
   }
 
   playCard(card: Card, color?: string): void {
@@ -80,6 +112,7 @@ export class GameComponent implements OnInit, OnDestroy {
   drawCard(): void {
     const player = this.gameService.getCurrentPlayer();
     if (!player) return;
+    if(!this.isMyTurn()) return;
 
     this.gameService.drawCard(this.roomId, player.id);
   }
@@ -93,7 +126,7 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   getCardImage(card: Card): string {
-    return `assets/cards/${card.id}.png`;
+    return `assets/cards/${card.imageId}.png`;
   }
 
   canPlayCard(card: Card): boolean {
@@ -132,5 +165,15 @@ export class GameComponent implements OnInit, OnDestroy {
 
   getCardBacksArray(count: number): any[] {
     return Array(count).fill(null);
+  }
+
+  isGameOver(): boolean {
+    return (
+      !!this.gameState && !this.gameState.isActive && this.gameState.players.some((player) => player.hand.length === 0) && this.gameState.deck.length !== 107
+    )
+  }
+
+  getWinner(): string {
+    return this.gameState?.players.find(p => p.hand.length === 0)?.name || 'Unknown Player'
   }
 }

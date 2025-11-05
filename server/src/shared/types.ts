@@ -8,10 +8,11 @@ export type CardType =
   | 'wild_draw_four';
 
 export interface Card {
-  id: string; //  This will have path for the assets folder to open image
+  id: string;
   color: Color;
   type: CardType;
   value?: number;
+  imageId: string;
 }
 
 export interface Player {

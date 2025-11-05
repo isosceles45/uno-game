@@ -23,12 +23,6 @@ export class SocketService {
     }
   }
 
-  disconnect(): void {
-    if (this.socket.connected) {
-      this.socket.disconnect();
-    }
-  }
-
   // Emit events
   joinRoom(roomId: string, player: Player): void {
     this.socket.emit('join', { roomId, player });
@@ -44,6 +38,10 @@ export class SocketService {
 
   drawCard(roomId: string, playerId: string): void {
     this.socket.emit('draw', { roomId, playerId });
+  }
+
+  emitUnoYell(roomId: string, playerId: string) {
+    this.socket.emit('yell_uno', { roomId, playerId });
   }
 
   // Listen to events
@@ -63,23 +61,16 @@ export class SocketService {
     });
   }
 
-  onConnect(): Observable<void> {
+  onUnoCalled(): Observable<{ playerId: string }> {
     return new Observable(observer => {
-      this.socket.on('connect', () => {
-        observer.next();
-      });
+      this.socket.on('uno_called', (data: { playerId: string }) => observer.next(data));
     });
   }
 
-  onDisconnect(): Observable<void> {
+  onUnoPenalty(): Observable<{ playerId: string }> {
     return new Observable(observer => {
-      this.socket.on('disconnect', () => {
-        observer.next();
-      });
+      this.socket.on('uno_penalty', (data: { playerId: string }) => observer.next(data));
     });
   }
 
-  isConnected(): boolean {
-    return this.socket.connected;
-  }
 }

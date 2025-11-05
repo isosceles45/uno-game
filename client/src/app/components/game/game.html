@@ -6,8 +6,24 @@
     </div>
   }
 
-  <!-- Waiting Room -->
-  @if (gameState && !gameState.isActive) {
+  @if (isGameOver()) {
+    <div class="waiting-room">
+      <h2>Game Over</h2>
+
+      <div class="player-item">
+        <p>
+          Winner:
+          <strong>
+            {{ getWinner() }}
+          </strong>
+        </p>
+      </div>
+
+      <div class="room-id">
+        <button class="btn-start" (click)="startGame()">Play Again</button>
+      </div>
+    </div>
+  } @else if (gameState && !gameState.isActive) {
     <div class="waiting-room">
       <h2>Waiting Room</h2>
       <div class="room-id">
@@ -122,6 +138,13 @@
         </div>
       </div>
     </div>
+
+    <!-- YELL UNO Button -->
+    @if (unoButtonVisible) {
+      <div class="uno-button-container">
+        <button class="btn-start" (click)="yellUno()">YELL UNO!</button>
+      </div>
+    }
   }
 
   <!-- Color Picker Modal -->

@@ -11,7 +11,6 @@ export class GameService {
   public gameState$: Observable<GameState | null> = this.gameStateSubject.asObservable();
 
   private currentPlayerSubject = new BehaviorSubject<Player | null>(null);
-  public currentPlayer$: Observable<Player | null> = this.currentPlayerSubject.asObservable();
 
   private errorSubject = new BehaviorSubject<string | null>(null);
   public error$: Observable<string | null> = this.errorSubject.asObservable();
@@ -33,10 +32,6 @@ export class GameService {
 
   connect(): void {
     this.socketService.connect();
-  }
-
-  disconnect(): void {
-    this.socketService.disconnect();
   }
 
   joinGame(roomId: string, playerId: string, playerName: string): void {
@@ -61,6 +56,9 @@ export class GameService {
     this.socketService.drawCard(roomId, playerId);
   }
 
+  yellUno(roomId: string, playerId: string): void {
+    this.socketService.emitUnoYell(roomId, playerId);
+  }
   getCurrentPlayer(): Player | null {
     return this.currentPlayerSubject.value;
   }
@@ -74,6 +72,7 @@ export class GameService {
     }
 
     const currentPlayer = state.players[state.currentPlayerIndex];
+
     return currentPlayer?.id === player.id;
   }
 

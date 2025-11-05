@@ -10,6 +10,8 @@ export class GameService {
     private readonly deckHelper: Deck,
   ) {}
 
+  private unoTimers: Map<string, NodeJS.Timeout> = new Map();
+
   private stackDraw(state: GameState, count: number): void {
     const nextIdx =
       (state.currentPlayerIndex + state.direction + state.players.length) %
@@ -138,6 +140,30 @@ export class GameService {
 
     player.hand = player.hand.filter((c) => c.id !== card.id);
 
+    if (player.hand.length === 1) {
+      player.hasSaidUno = false;
+      const timerKey = `${roomId}-${player.id}`;
+
+      if (this.unoTimers.has(timerKey)) {
+        clearTimeout(this.unoTimers.get(timerKey));
+      }
+
+      const timeout = setTimeout(() => {
+        if (player && !player.hasSaidUno) {
+          console.log(`${player.name} failed to yell UNO - penalty applied`);
+
+          const [drawn, remaining] = this.deckHelper.draw(state.deck, 2);
+          player.hand.push(...drawn);
+          state.deck = remaining;
+          player.hasSaidUno = false;
+
+          this.store.save(roomId, state);
+        }
+        this.unoTimers.delete(timerKey);
+      }, 5000);
+
+      this.unoTimers.set(timerKey, timeout);
+    }
     this.applyCardEffect(state, card);
 
     state.discardPile.push(card);
@@ -179,6 +205,24 @@ export class GameService {
     state.deck = remaining;
 
     this.nextTurn(state);
+    this.store.save(roomId, state);
+    return state;
+  }
+
+  handleUnoYell(roomId: string, playerId: string): GameState {
+    const state = this.store.get(roomId);
+    if (!state) throw new Error('Game not found');
+    const player = state.players.find((p) => p.id === playerId);
+    if (!player) throw new Error('Player not found');
+
+    player.hasSaidUno = true;
+
+    const timerKey = `${roomId}-${playerId}`;
+    if (this.unoTimers.has(timerKey)) {
+      clearTimeout(this.unoTimers.get(timerKey));
+      this.unoTimers.delete(timerKey);
+    }
+
     this.store.save(roomId, state);
     return state;
   }

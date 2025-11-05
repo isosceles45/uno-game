@@ -11,7 +11,7 @@ import { GameStore } from './store/store';
 import { Player, Card } from '../shared/types';
 
 @WebSocketGateway({
-  cors: { origin: '*' },
+  cors: { origin: 'http://localhost:4200' },
 })
 export class GameGateway {
   @WebSocketServer()
@@ -106,6 +106,19 @@ export class GameGateway {
       this.server
         .to(data.roomId)
         .emit('error', { message: (err as Error).message });
+    }
+  }
+
+  @SubscribeMessage('yell_uno')
+  handleYellUno(
+    @MessageBody() data: { roomId: string; playerId: string },
+    @ConnectedSocket() client: Socket,
+  ) {
+    try {
+      const state = this.gameService.handleUnoYell(data.roomId, data.playerId);
+      this.server.to(data.roomId).emit('state', state);
+    } catch (err) {
+      client.emit('error', { message: (err as Error).message });
     }
   }
 }

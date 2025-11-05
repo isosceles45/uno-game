@@ -3,6 +3,7 @@ export interface Card {
   color: 'red' | 'blue' | 'green' | 'yellow' | 'wild';
   type: 'number' | 'skip' | 'reverse' | 'draw_two' | 'wild' | 'wild_draw_four';
   value?: number;
+  imageId: string;
 }
 
 export interface Player {
